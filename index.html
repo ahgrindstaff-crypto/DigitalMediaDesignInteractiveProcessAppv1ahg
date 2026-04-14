@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Medic: Humanistic AI Challenge</title>
+    <style>
+        :root { --primary: #6366f1; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; color: var(--text); }
+        #app-container { max-width: 400px; width: 100%; background: white; border-radius: 30px; border: 8px solid #334155; height: 700px; position: relative; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        #screen { padding: 30px; text-align: center; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 12px; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:hover { transform: scale(1.02); opacity: 0.9; }
+        .progress-bar { width: 100%; height: 10px; background: #e2e8f0; position: absolute; top: 0; }
+        #fill { height: 100%; background: #22c55e; width: 0%; transition: 0.5s; }
+        .status { font-size: 0.8rem; font-weight: bold; margin-bottom: 20px; color: #64748b; }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div class="progress-bar"><div id="fill"></div></div>
+    <div id="screen">
+        <h2 id="title">Welcome, Design Medic</h2>
+        <p id="desc">A major app is causing 'Emojic Damage' to users. You have been hired to fix the design using Humanistic AI logic.</p>
+        <div id="options">
+            <button class="btn" onclick="nextStep(1)">Start Mission</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let step = 0;
+    const data = [
+        {
+            title: "Level 1: The Frustrating Error",
+            desc: "The user's login failed. The current screen is a bright red 'ERROR' sign. How do we fix the Humanistic experience?",
+            options: [
+                { text: "Make the 'Retry' button bigger", score: 10, next: 2 },
+                { text: "Change to calm colors & explain WHY it failed", score: 30, next: 2 }
+            ]
+        },
+        {
+            title: "Level 2: The Automation Ladder",
+            desc: "The user is tired of manually sorting 100 photos. Where do we move on the ladder?",
+            options: [
+                { text: "Assisted: AI suggests groups, user confirms", score: 30, next: 3 },
+                { text: "Full Auto: AI deletes 'bad' photos without asking", score: -20, next: 3 }
+            ]
+        },
+        {
+            title: "Level 3: The Reset Logic",
+            desc: "The 'Start Over' button isn't working—it's keeping old data. What is the design priority?",
+            options: [
+                { text: "Clean State: Ensure all inputs clear on click", score: 30, next: 'end' },
+                { text: "Flashy Animation: Make the button spin", score: 5, next: 'end' }
+            ]
+        }
+    ];
+
+    function nextStep(i) {
+        if(i === 'end') {
+            document.getElementById('title').innerText = "Mission Complete!";
+            document.getElementById('desc').innerText = "You have restored the Digital Pulse. Your Humanistic Design Score is high!";
+            document.getElementById('options').innerHTML = `<button class="btn" onclick="location.reload()">New Shift</button>`;
+            return;
+        }
+        let current = data[step];
+        document.getElementById('title').innerText = current.title;
+        document.getElementById('desc').innerText = current.desc;
+        document.getElementById('options').innerHTML = current.options.map(opt => 
+            `<button class="btn" onclick="updateScore(${opt.score}); nextStep('${opt.next}')">${opt.text}</button>`
+        ).join('');
+        step++;
+    }
+
+    let totalScore = 0;
+    function updateScore(s) {
+        totalScore += s;
+        document.getElementById('fill').style.width = totalScore + "%";
+    }
+</script>
+</body>
+</html>
