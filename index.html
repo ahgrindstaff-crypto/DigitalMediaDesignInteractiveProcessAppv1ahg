@@ -39,21 +39,20 @@
         <div id="main-content">
             <div id="game-area">
                 <div class="badge">Initializing...</div>
-                <h2>UX Architect: Protocol 4.3</h2>
-                <p>Welcome back, Architect. You must navigate 22 critical design decisions to restore the Digital Pulse. The meter will track your cumulative empathy.</p>
+                <h2>UX Architect: Protocol 4.4</h2>
+                <p>Anti-pattern protection enabled. Decisions will now be randomized to ensure true design mastery.</p>
                 <div class="btn-list">
                     <button class="choice-btn" onclick="startGame()">Begin Simulation</button>
                 </div>
             </div>
         </div>
-        <div id="vitals">BV-229 // GRINDSTAFF_STABILITY_CALIB</div>
+        <div id="vitals">BV-229 // GRINDSTAFF_RANDOM_PROTO</div>
     </div>
 </div>
 
 <script>
     let rawScore = 0;
     let currentIdx = 0;
-    // Max points possible across 22 questions (approx 20 points per correct answer)
     const MAX_POSSIBLE_SCORE = 300; 
 
     const levels = [
@@ -68,7 +67,7 @@
         { tag: "Hierarchy", title: "The Finger Trap", desc: "A button is only 10px wide on a mobile screen. What is the design fix?", opts: [{t: "Increase touch target to at least 44px.", s: 15}, {t: "Tell the user to use a stylus.", s: -10}]},
         { tag: "Feedback", title: "The Soundscape", desc: "A user completes a difficult task. What audio feedback is most Humanistic?", opts: [{t: "A soft, harmonized chime.", s: 10}, {t: "A loud, startling air-horn blast.", s: -20}]},
         { tag: "Transparency", title: "The Logic Gap", desc: "The AI made a mistake. How do you explain it to the user?", opts: [{t: "Provide a 'Why did this happen?' link.", s: 15}, {t: "Hide the error and hope they don't notice.", s: -20}]},
-        { tag: "Motion", title: "The Motion Blur", desc: "A transition between screens causes dizziness. What do you do?", opts: [{t: "Add an 'Ease-In-Out' curve to the motion.", s: 10}, {t: "Remove all animations entirely.", s: 0}]},
+        { tag: "Motion", title: "The Motion Blur", desc: "A transition causes dizziness. What do you do?", opts: [{t: "Add an 'Ease-In-Out' curve to the motion.", s: 10}, {t: "Remove all animations entirely.", s: 0}]},
         { tag: "Ladder", title: "The Trust Gap", desc: "The AI wants to delete duplicate files. How do you design the confirmation?", opts: [{t: "List files and ask for a 'Check-All' click.", s: 15}, {t: "Delete them silently to save space.", s: -20}]},
         { tag: "Concept", title: "The Empty State", desc: "A user's inbox is empty. What design creates a better 'Digital Pulse'?", opts: [{t: "A calm graphic and an 'All caught up!' note.", s: 10}, {t: "A blank white screen.", s: -10}]},
         { tag: "Ethics", title: "The Nudge", desc: "An app sends 10 notifications per hour. How do you reduce Emojic Damage?", opts: [{t: "Group alerts into a single 'Daily Digest'.", s: 15}, {t: "Make the notification sound louder.", s: -10}]},
@@ -81,10 +80,20 @@
         { tag: "Final", title: "Tool vs Teammate", desc: "How should the final UI represent the AI's role in the user's life?", opts: [{t: "As a co-pilot (Human-centric partnership).", s: 20}, {t: "As a servant (Strictly manual tool).", s: 5}]}
     ];
 
+    // Fisher-Yates Shuffle Algorithm
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex != 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
     function updateMeter() {
         const fill = document.getElementById('meter-fill');
         const text = document.getElementById('score-percent');
-        // Calculate percentage based on max possible rawScore
         let percentage = Math.floor((rawScore / MAX_POSSIBLE_SCORE) * 100);
         let bounded = Math.max(0, Math.min(percentage, 100));
         fill.style.width = bounded + "%";
@@ -104,13 +113,17 @@
             return;
         }
         const lvl = levels[currentIdx];
+        
+        // SHUFFLE the options before rendering them
+        const shuffledOpts = shuffle([...lvl.opts]);
+        
         const area = document.getElementById('game-area');
         area.innerHTML = `
             <div class="badge">${lvl.tag} [${currentIdx + 1}/22]</div>
             <h2>${lvl.title}</h2>
             <p>${lvl.desc}</p>
             <div class="btn-list">
-                ${lvl.opts.map((o, i) => `<button class="choice-btn" onclick="handleChoice(${o.s})">${o.t}</button>`).join('')}
+                ${shuffledOpts.map((o) => `<button class="choice-btn" onclick="handleChoice(${o.s})">${o.t}</button>`).join('')}
             </div>
         `;
     }
@@ -129,7 +142,7 @@
         area.innerHTML = `
             <div class="badge">Evaluation Complete</div>
             <h2>Status: ${rank}</h2>
-            <p>Your empathy-driven design choices resulted in a <strong>${Math.max(0, percentage)}%</strong> Humanity Rating.</p>
+            <p>Your Humanity Rating: <strong>${Math.max(0, percentage)}%</strong>.</p>
             <div class="btn-list">
                 <button class="choice-btn" onclick="startGame()">Re-Run Simulation</button>
             </div>
