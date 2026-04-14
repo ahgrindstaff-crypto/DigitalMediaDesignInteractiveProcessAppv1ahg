@@ -3,81 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Design Medic: Humanistic AI Challenge</title>
+    <title>UX ARCHITECT: The Humanistic Protocol</title>
     <style>
-        :root { --primary: #6366f1; --bg: #f8fafc; --text: #1e293b; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; padding: 20px; color: var(--text); }
-        #app-container { max-width: 400px; width: 100%; background: white; border-radius: 30px; border: 8px solid #334155; height: 700px; position: relative; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        #screen { padding: 30px; text-align: center; }
-        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 12px; background: var(--primary); color: white; font-weight: bold; cursor: pointer; transition: 0.2s; }
-        .btn:hover { transform: scale(1.02); opacity: 0.9; }
-        .progress-bar { width: 100%; height: 10px; background: #e2e8f0; position: absolute; top: 0; }
-        #fill { height: 100%; background: #22c55e; width: 0%; transition: 0.5s; }
-        .status { font-size: 0.8rem; font-weight: bold; margin-bottom: 20px; color: #64748b; }
+        :root { --primary: #818cf8; --accent: #22d3ee; --danger: #f43f5e; --bg: #020617; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; overflow: hidden; }
+        #phone-shell { width: 380px; height: 780px; background: #000; border: 12px solid #334155; border-radius: 50px; position: relative; box-shadow: 0 50px 100px -20px rgba(0,0,0,0.7); display: flex; flex-direction: column; }
+        #notch { width: 150px; height: 30px; background: #000; position: absolute; top: -2px; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; z-index: 10; }
+        #app-screen { flex: 1; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 38px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        #header { padding: 45px 20px 15px; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .meter-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 5px; font-weight: 800; }
+        .meter-bg { width: 100%; height: 6px; background: #334155; border-radius: 10px; overflow: hidden; }
+        #meter-fill { height: 100%; background: linear-gradient(to right, var(--danger), var(--accent)); width: 50%; transition: 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        #content { flex: 1; padding: 25px; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+        .badge { display: inline-block; padding: 4px 10px; background: rgba(129, 140, 248, 0.2); border: 1px solid var(--primary); color: var(--primary); border-radius: 6px; font-size: 0.7rem; font-weight: bold; margin-bottom: 15px; }
+        h2 { font-size: 1.3rem; margin: 0 0 12px; line-height: 1.2; }
+        p { font-size: 0.95rem; line-height: 1.5; color: #94a3b8; margin-bottom: 25px; }
+        .option-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #e2e8f0; padding: 16px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; text-align: left; font-size: 0.9rem; transition: 0.2s; display: flex; align-items: center; }
+        .option-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); transform: scale(1.02); }
+        .option-btn:active { transform: scale(0.98); }
+        #vitals { position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: 0.7rem; color: #475569; }
     </style>
 </head>
 <body>
 
-<div id="app-container">
-    <div class="progress-bar"><div id="fill"></div></div>
-    <div id="screen">
-        <h2 id="title">Welcome, Design Medic</h2>
-        <p id="desc">A major app is causing 'Emojic Damage' to users. You have been hired to fix the design using Humanistic AI logic.</p>
-        <div id="options">
-            <button class="btn" onclick="nextStep(1)">Start Mission</button>
+<div id="phone-shell">
+    <div id="notch"></div>
+    <div id="app-screen">
+        <div id="header">
+            <div class="meter-label">Humanity Stability Index</div>
+            <div class="meter-bg"><div id="meter-fill"></div></div>
         </div>
+        <div id="content">
+            <div class="badge" id="step-tag">Phase 01</div>
+            <h2 id="step-title">Architect Wake-Up</h2>
+            <p id="step-desc">System Error: Global "Digital Pulse" is flatlining. The AI is becoming cold and logical. Your mission: Re-design the interface to restore human empathy.</p>
+            <div id="options">
+                <button class="option-btn" onclick="render(1)">Enter Simulation</button>
+            </div>
+        </div>
+        <div id="vitals">GRINDSTAFF DESIGN PROTOCOL v4.0</div>
     </div>
 </div>
 
 <script>
-    let step = 0;
-    const data = [
+    let humanity = 50;
+    let currentStep = 0;
+
+    const scenarios = [
         {
-            title: "Level 1: The Frustrating Error",
-            desc: "The user's login failed. The current screen is a bright red 'ERROR' sign. How do we fix the Humanistic experience?",
-            options: [
-                { text: "Make the 'Retry' button bigger", score: 10, next: 2 },
-                { text: "Change to calm colors & explain WHY it failed", score: 30, next: 2 }
+            tag: "01: The Lockout",
+            title: "Access Denied",
+            desc: "A student forgot their password. The AI wants to lock the account for 24 hours to 'optimize security.' How do you fix this?",
+            opts: [
+                { text: "Allow 3 retries, then offer a hint based on a secret icon.", score: 10 },
+                { text: "Immediate 24hr lock. Security is the only priority.", score: -20 }
             ]
         },
         {
-            title: "Level 2: The Automation Ladder",
-            desc: "The user is tired of manually sorting 100 photos. Where do we move on the ladder?",
-            options: [
-                { text: "Assisted: AI suggests groups, user confirms", score: 30, next: 3 },
-                { text: "Full Auto: AI deletes 'bad' photos without asking", score: -20, next: 3 }
+            tag: "02: The Automation Ladder",
+            title: "Essay Drafting",
+            desc: "The AI wants to auto-generate the entire intro paragraph for a student. Where does this live on the ladder?",
+            opts: [
+                { text: "Full Auto: AI writes it. (High risk of plagiarism)", score: -15 },
+                { text: "Assisted: AI provides a vocabulary 'Word Bank' only.", score: 15 }
             ]
         },
         {
-            title: "Level 3: The Reset Logic",
-            desc: "The 'Start Over' button isn't working—it's keeping old data. What is the design priority?",
-            options: [
-                { text: "Clean State: Ensure all inputs clear on click", score: 30, next: 'end' },
-                { text: "Flashy Animation: Make the button spin", score: 5, next: 'end' }
+            tag: "03: State Reset",
+            title: "The Stuck Screen",
+            desc: "A user finished a quiz, but the 'Next' button is grayed out because the score hasn't updated. What is the logic fix?",
+            opts: [
+                { text: "State Change: Trigger refresh when last bubble is clicked.", score: 15 },
+                { text: "Visual Fix: Make the gray button sparkle.", score: -10 }
+            ]
+        },
+        {
+            tag: "04: Emojic Damage",
+            title: "The Failure Message",
+            desc: "A user failed a level. The current message is: 'YOU ARE INADEQUATE.' Redesign it for Humanistic AI.",
+            opts: [
+                { text: "'Almost there! Focus on the timing for the next round.'", score: 20 },
+                { text: "'Level Failed. Try again.' (Neutral but cold)", score: 5 }
+            ]
+        },
+        {
+            tag: "05: UI Hierarchy",
+            title: "The 'Panic' Button",
+            desc: "A user is overwhelmed. Where should the 'Get Help' button go?",
+            opts: [
+                { text: "Bottom corner, always visible, distinct color.", score: 15 },
+                { text: "Hidden in the 'Settings' menu to keep the UI clean.", score: -10 }
+            ]
+        },
+        {
+            tag: "06: Data Ethics",
+            title: "The Memory Bank",
+            desc: "The AI wants to track the student's eye movements to see if they are 'paying attention.'",
+            opts: [
+                { text: "Disable. This is invasive and increases anxiety.", score: 25 },
+                { text: "Enable. It provides 'Focus Data' for the teacher.", score: -20 }
+            ]
+        },
+        {
+            tag: "07: Accessibility",
+            title: "The Colorblind Test",
+            desc: "Your 'Success' button is green and your 'Error' button is red. How do you help colorblind users?",
+            opts: [
+                { text: "Add unique icons (Checkmark vs X) to each button.", score: 15 },
+                { text: "Use different shades of green and red.", score: -5 }
+            ]
+        },
+        {
+            tag: "08: The Feedback Loop",
+            title: "Confirmation Bias",
+            desc: "The AI only shows the user news articles they already agree with. It calls this 'Comfort Mode.'",
+            opts: [
+                { text: "Introduce a 'Perspective Shift' toggle for different views.", score: 20 },
+                { text: "Keep it. It increases time spent in the app.", score: -15 }
+            ]
+        },
+        {
+            tag: "09: State Persistence",
+            title: "The Mid-Work Crash",
+            desc: "The app crashed. When the user re-opens it, where should they be?",
+            opts: [
+                { text: "Exactly where they left off (State saved).", score: 20 },
+                { text: "Back to the login screen (Security first).", score: -10 }
+            ]
+        },
+        {
+            tag: "10: The Nudge",
+            title: "Digital Wellness",
+            desc: "The user has been on the app for 3 hours. How does a Humanistic AI intervene?",
+            opts: [
+                { text: "Dim the screen and suggest a 'Brain Break.'", score: 15 },
+                { text: "Send a notification: 'Keep going! 10% more XP!'", score: -20 }
+            ]
+        },
+        {
+            tag: "11: Concept First",
+            title: "Architectural Shift",
+            desc: "The CEO wants to add 50 features. The app is getting cluttered. What do you do?",
+            opts: [
+                { text: "Prioritize the core 'Human' function; cut the rest.", score: 20 },
+                { text: "Add more tabs and menus to fit everything in.", score: -15 }
+            ]
+        },
+        {
+            tag: "12: The Final Reveal",
+            title: "The Mirror State",
+            desc: "The AI asks: 'Am I a tool or a teammate?' How do you design the final interaction?",
+            opts: [
+                { text: "Design a co-pilot relationship (Teamwork).", score: 20 },
+                { text: "Design a master-servant relationship (Tool).", score: 5 }
             ]
         }
     ];
 
-    function nextStep(i) {
-        if(i === 'end') {
-            document.getElementById('title').innerText = "Mission Complete!";
-            document.getElementById('desc').innerText = "You have restored the Digital Pulse. Your Humanistic Design Score is high!";
-            document.getElementById('options').innerHTML = `<button class="btn" onclick="location.reload()">New Shift</button>`;
+    function render(stepIdx) {
+        if (stepIdx >= scenarios.length) {
+            endGame();
             return;
         }
-        let current = data[step];
-        document.getElementById('title').innerText = current.title;
-        document.getElementById('desc').innerText = current.desc;
-        document.getElementById('options').innerHTML = current.options.map(opt => 
-            `<button class="btn" onclick="updateScore(${opt.score}); nextStep('${opt.next}')">${opt.text}</button>`
-        ).join('');
-        step++;
+        const s = scenarios[stepIdx];
+        document.getElementById('step-tag').innerText = s.tag;
+        document.getElementById('step-title').innerText = s.title;
+        document.getElementById('step-desc').innerText = s.desc;
+        
+        const optContainer = document.getElementById('options');
+        optContainer.innerHTML = '';
+        
+        s.opts.forEach(o => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = o.text;
+            btn.onclick = () => {
+                humanity += o.score;
+                updateMeter();
+                render(stepIdx + 1);
+            };
+            optContainer.appendChild(btn);
+        });
     }
 
-    let totalScore = 0;
-    function updateScore(s) {
-        totalScore += s;
-        document.getElementById('fill').style.width = totalScore + "%";
+    function updateMeter() {
+        const fill = document.getElementById('meter-fill');
+        const bounded = Math.max(5, Math.min(humanity, 100));
+        fill.style.width = bounded + "%";
+    }
+
+    function endGame() {
+        document.getElementById('step-tag').innerText = "Simulation Finalized";
+        document.getElementById('step-title').innerText = humanity > 100 ? "Elite Humanist" : (humanity > 50 ? "Design Professional" : "System Error");
+        document.getElementById('step-desc').innerText = `Final Humanity Score: ${humanity}. ${humanity > 100 ? "You've successfully bridged the gap between machine and soul." : "The system is stable, but requires more humanistic empathy."}`;
+        document.getElementById('options').innerHTML = `<button class="option-btn" onclick="location.reload()">Re-Initialize System</button>`;
     }
 </script>
 </body>
